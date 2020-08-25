@@ -9,8 +9,35 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var people = [Person]()
+    
     var body: some View {
-        Text("Hello, World!")
+        NavigationView {
+            List(0..<people.count, id: \.self) { row in
+                NavigationLink(destination: Text("Detail \(row)")) {
+                    Text("\(self.people[row].name)")
+                }
+            }.navigationBarTitle("People")
+        }
+        .onAppear(perform: loadData)
+    }
+    
+    private func loadData() {
+        let url = URL(string: "https://www.hackingwithswift.com/samples/friendface.json")!
+        URLSession.shared.dataTask(with: URLRequest(url: url)) { (data, response, error) in
+            guard error == nil, let response = response as? HTTPURLResponse, response.statusCode == 200, let data = data else {
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            
+            if let decoded = try? decoder.decode([Person].self, from: data) {
+                DispatchQueue.main.async {
+                    self.people = decoded
+                }
+            }
+        }.resume()
     }
 }
 
