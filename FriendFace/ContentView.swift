@@ -14,7 +14,7 @@ struct ContentView: View {
     var body: some View {
         NavigationView {
             List(0..<people.count, id: \.self) { row in
-                NavigationLink(destination: DetailView(person: self.people[row], people: self.people)) {
+                NavigationLink(destination: DetailView(person: self.people[row], people: self.people, friends: self.people[row].friends)) {
                     VStack(alignment: .leading) {
                         Text("\(self.people[row].name)")
                         Text("\(self.people[row].email ?? "")")

@@ -11,8 +11,10 @@ import SwiftUI
 struct DetailView: View {
     let person: Person
     let people: [Person]
-    var friendCount: Int {
-        person.friends?.count ?? 0
+    var friends: [Person]?
+    
+    private var unwrappedFriends: [Person] {
+        friends ?? [Person]()
     }
     
     var body: some View {
@@ -31,14 +33,13 @@ struct DetailView: View {
     }
     
     private func getPerson(from row: Int) -> Person {
-        let id = self.person.friends![row].id
-        return getDetail(from: id)!
+        let friend = self.unwrappedFriends[row]
+        return getDetail(from: friend.id) ?? friend
     }
     
-    
     private var friendsView: some View {
-        List(0..<friendCount, id: \.self) { row in
-            NavigationLink(destination: DetailView(person: self.getPerson(from: row), people: self.people)) {
+        List(0..<unwrappedFriends.count, id: \.self) { row in
+            NavigationLink(destination: DetailView(person: self.getPerson(from: row), people: self.people, friends: self.getPerson(from: row).friends)) {
                 VStack(alignment: .leading) {
                     Text("\(self.getPerson(from: row).name)")
                     Text("\(self.getPerson(from: row).email ?? "")")
@@ -57,6 +58,6 @@ struct DetailView: View {
 
 struct DetailView_Previews: PreviewProvider {
     static var previews: some View {
-        DetailView(person: Person(id: "", name: "", isActive: nil, age: nil, company: nil, email: nil, address: nil, about: nil, registered: nil, tags: nil, friends: nil), people: [Person]())
+        DetailView(person: Person(id: "", name: ""), people: [Person]())
     }
 }

@@ -11,13 +11,18 @@ import Foundation
 struct Person: Codable {
     let id: String
     let name: String
-    let isActive: Bool?
-    let age: Int?
-    let company: String?
-    let email: String?
-    let address: String?
-    let about: String?
-    let registered: Date?
-    let tags: [String]?
-    let friends: [Person]?
+    let isActive: Bool? = nil
+    let age: Int? = nil
+    let company: String? = nil
+    let email: String? = nil
+    let address: String? = nil
+    let about: String? = nil
+    let registered: Date? = nil
+    let tags: [String]? = nil
+    let friends: [Person]? = nil
+    
+    init(id: String, name: String) {
+        self.id = id
+        self.name = name
+    }
 }
